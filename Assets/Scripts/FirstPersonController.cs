@@ -1,51 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstPersonController : MonoBehaviour
+public class FirstPersonController : RigidbodyCharacter
 {
+    [Range(0, 15f)]
     public float movementSpeed = 5f;
+    [Range(0, 15f)]
     public float rotationSpeed = 15f;
 
-    private Rigidbody _rigidbody;
-    private CapsuleCollider _capsuleCollider;
+    public DamageHandler testHandler;
 
-    void Start()
+
+    public void Update()
     {
-        _rigidbody = GetComponent<Rigidbody>();
-        _capsuleCollider = GetComponent<CapsuleCollider>();
+        var h = Input.GetAxis("Horizontal");
+        var v = Input.GetAxis("Vertical");
+
+        MoveInDirection(transform.TransformDirection(new Vector3(h, 0, v)));
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            DamageSystem.DamageEntity(testHandler, new DamagePacket(DamageType.Fire, 3f), new DamagePacket(DamageType.Piercing, 1f));
+        }
     }
 
-    public Vector3 GetCenter()
-    {
-        return transform.position + _capsuleCollider.center;
-    }
+    public DamageType damgeType;
 
-    public Vector3 GetFeetPosition()
-    {
-        Vector3 pos = transform.position;
-        pos -= _capsuleCollider.center;
-        pos -= Vector3.up * 0.5f * _capsuleCollider.height;
-        return pos;
-    }
-
-    public Vector3 GetEyeHeight()
-    {
-        Vector3 pos = GetCenter();
-        float eyePos = pos.y + (0.4f * _capsuleCollider.height);
-        pos.y = eyePos;
-        return pos;
-    }
-
-    public void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(GetCenter(), GetFeetPosition());
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(GetFeetPosition(), 0.1f);
-        Matrix4x4 rotationMatrix = Matrix4x4.TRS(GetEyeHeight(), transform.rotation, Vector3.one);
-        Gizmos.matrix = rotationMatrix;
-        Gizmos.DrawWireCube(Vector3.forward, new Vector3(1f, 0.3f, 1f));
-        
-    }
 
 }
