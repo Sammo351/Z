@@ -16,4 +16,9 @@ public class ItemStack
     {
         return item != null && quantity>0;
     }
+    public int Quantity
+    {
+        get { return quantity; }
+        set { quantity = value; }
+    }
 }

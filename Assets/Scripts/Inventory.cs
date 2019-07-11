@@ -11,27 +11,42 @@ public class Inventory
         items = new List<ItemStack>();
         maxSlots = _maxSlots;
     }
-    public void InsertItemStack(ItemStack stack)
+    //Add stack to a certain slot, return the leftover
+    public void InsertItemStack(ItemStack stack, int slot)
     {
-
+        AppendStack(stack);
     }
+
+    //Automatically add stack to the inventory
     void AppendStack(ItemStack stack)
     {
-        if(stack.IsValid())
+        if (stack.IsValid())
         {
+            int remaining = stack.Quantity;
             for (int i = 0; i < items.Count; i++)
             {
-                ItemStack check = items[i];
-                if(check != null && check.IsValid())
+                if (remaining <= 0)
                 {
-                    if(check.GetItem() == stack.GetItem())
+                    break;
+                }
+                ItemStack check = items[i];
+                if (check != null && check.IsValid())
+                {
+                    if (check.GetItem() == stack.GetItem())
                     {
-                        
+                        //add to inventory slot
+                        //take from stack
                     }
                 }
-               
+
             }
+            if (remaining > 0)
+            {
+                //Place in a new slot
+            }
+
         }
     }
+
 }
 
