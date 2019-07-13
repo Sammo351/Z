@@ -10,13 +10,14 @@ public class RigidbodyCharacter : MonoBehaviour
     private CapsuleCollider _capsuleCollider;
 
     [Flags]
+    [System.Serializable]
     public enum CharacterStates
     {
         CanMove,
         IsGrounded
     }
 
-    void Awake()
+    void OnEnable()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
@@ -93,6 +94,30 @@ public class RigidbodyCharacter : MonoBehaviour
 
     }
 
+    public LayerMask GroundLayer;
+    private bool _cachedGroundedState = false;
+    private float _lastGroundedCheck;
+
+    public bool IsGrounded() // Might possibly have to multi-thread this to avoid 100's of zombies lagging out just because of grounded checks.
+    {
+        //Store a local grounded state, to avoid grounded checks every frame. Instead, on an average of every 10 frames.
+        if (Time.time - _lastGroundedCheck > 0.1f)
+        {
+            Vector3 feet = GetFeetPosition() + Vector3.up * 0.1f;
+
+            RaycastHit hit;
+            Ray ray = new Ray(feet, Vector3.down);
+            //0.05f Max Distance threshold for grounded check.
+            if (Physics.Raycast(ray, out hit, 0.15f, GroundLayer, QueryTriggerInteraction.Ignore))
+                _cachedGroundedState = true;
+            else
+                _cachedGroundedState = false;
+
+            _lastGroundedCheck = Time.time;
+        }
+
+        return _cachedGroundedState;
+    }
 
 
 }

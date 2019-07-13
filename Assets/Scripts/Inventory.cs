@@ -5,16 +5,19 @@ public class Inventory
     public EntityBase owner;
     List<ItemStack> items;
     int maxSlots = 18;
-    Inventory(EntityBase _owner, int _maxSlots = 18)
+
+    public Inventory(EntityBase _owner, int _maxSlots = 18)
     {
         owner = _owner;
         items = new List<ItemStack>();
         maxSlots = _maxSlots;
     }
+    
     //Add stack to a certain slot, return the leftover
     public void InsertItemStack(ItemStack stack, int slot)
     {
         AppendStack(stack);
+        
     }
 
     //Automatically add stack to the inventory

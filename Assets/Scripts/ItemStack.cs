@@ -8,14 +8,17 @@ public class ItemStack
         item = _item;
         quantity = _q;
     }
+
     public Item GetItem()
     {
         return item;
     }
+
     public bool IsValid()
     {
-        return item != null && quantity>0;
+        return item != null && quantity > 0;
     }
+
     public int Quantity
     {
         get { return quantity; }

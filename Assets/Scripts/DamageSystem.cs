@@ -1,10 +1,4 @@
-//Byte damage system
-//DamagePackets
-
-//BatchDamagePackets(params DamagePacket)
-
 using System;
-using UnityEngine;
 
 public class DamageSystem
 {
@@ -20,37 +14,33 @@ public class DamageSystem
             DamageEntity(entities[i], packets);
     }
 
-}
-
-[System.Serializable]
-public struct DamagePacket
-{
-    public DamageType damageType;
-    public float damageAmount;
-
-    public DamagePacket(DamageType damageType, float damageAmount)
+    public static void DamageEntity(DamageHandler entity, float damageAmount, DamageType damageType)
     {
-        this.damageAmount = damageAmount;
-        this.damageType = damageType;
+        DamageEntity(entity, new DamagePacket(damageType, damageAmount));
     }
 
-    public bool ContainsDamageType(DamageType damageType)
+    public static void DamageEntity(EntityBase entity, params DamagePacket[] packets)
     {
-        return this.damageType.HasFlag(damageType);
+        DamageEntity(entity.GetComponent<DamageHandler>(), packets);
+    }
+
+    public static void DamageEntity(EntityBase entity, float damageAmount, DamageType damageType)
+    {
+        DamageEntity(entity.GetComponent<DamageHandler>(), damageAmount, damageType);
+    }
+
+    public static void DamageEntities(EntityBase[] entities, params DamagePacket[] packets)
+    {
+        for (int i = 0; i < entities.Length; i++)
+            DamageEntity(entities[i], packets);
+    }
+
+
+    public static void DamageEntities(DamageHandler[] entities, float damage, DamageType damageType)
+    {
+        for (int i = 0; i < entities.Length; i++)
+            DamageEntity(entities[i], damage, damageType);
     }
 }
 
-[Flags]
-[System.Serializable]
-public enum DamageType
-{
-    Default = 1 << 0,
-    Piercing = 1 << 1,
-    Bludgeoning = 1 << 2,
-    Slashing = 1 << 3,
-    Force = 1 << 4,
-    Fire = 1 << 5,
-    Acid = 1 << 6,
-    Posion = 1 << 7,
-    Necrotic = 1 << 8
-}
+

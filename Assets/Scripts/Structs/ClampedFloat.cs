@@ -55,5 +55,4 @@ public struct ClampedFloat
     {
         return clampedFloat.Value;
     }
-
 }
